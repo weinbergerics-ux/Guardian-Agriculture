@@ -1,0 +1,161 @@
+// src/main/java/com/guardian/controller/HomeController.java
+package com.guardian.controller;
+
+import com.guardian.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HomeController {
+    
+    @Autowired
+    private ProductService productService;
+    
+    @GetMapping("/")
+    public String home(Model model) {
+        model.addAttribute("featuredProducts", productService.getAllProducts().subList(0, Math.min(3, productService.getAllProducts().size())));
+        model.addAttribute("totalMarket", "1.4 Trillion");
+        model.addAttribute("dairyMarket", "150 Billion");
+        model.addAttribute("projectedMarket", "25 Billion");
+        return "index";
+    }
+}
+// src/main/java/com/guardian/controller/ProductController.java
+package com.guardian.controller;
+
+import com.guardian.model.Product;
+import com.guardian.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/products")
+public class ProductController {
+    
+    @Autowired
+    private ProductService productService;
+    
+    @GetMapping
+    public String listProducts(@RequestParam(required = false) String category, Model model) {
+        if (category != null && !category.equals("All")) {
+            model.addAttribute("products", productService.getProductsByCategory(category));
+            model.addAttribute("selectedCategory", category);
+        } else {
+            model.addAttribute("products", productService.getAllProducts());
+            model.addAttribute("selectedCategory", "All");
+        }
+        model.addAttribute("categories", new String[]{"All", "DAIRY", "MEAT", "FUNCTIONAL"});
+        return "products";
+    }
+    
+    @GetMapping("/{id}")
+    public String productDetail(@PathVariable Long id, Model model) {
+        Product product = productService.getProductById(id);
+        model.addAttribute("product", product);
+        return "product-detail";
+    }
+}
+// src/main/java/com/guardian/controller/OrderController.java
+package com.guardian.controller;
+
+import com.guardian.model.Order;
+import com.guardian.model.Product;
+import com.guardian.repository.OrderRepository;
+import com.guardian.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Controller
+@RequestMapping("/order")
+public class OrderController {
+    
+    @Autowired
+    private ProductService productService;
+    
+    @Autowired
+    private OrderRepository orderRepository;
+    
+    @GetMapping("/{productId}")
+    public String orderForm(@PathVariable Long productId, Model model) {
+        Product product = productService.getProductById(productId);
+        model.addAttribute("product", product);
+        model.addAttribute("order", new Order());
+        return "order";
+    }
+    
+    @PostMapping("/submit")
+    public String submitOrder(@ModelAttribute Order order, 
+                             @RequestParam Long productId,
+                             @RequestParam Integer quantity,
+                             Model model) {
+        Product product = productService.getProductById(productId);
+        
+        // Validate minimum order quantity
+        if (quantity < product.getMinOrderKg()) {
+            model.addAttribute("error", "Minimum order quantity is " + product.getMinOrderKg() + " kg");
+            model.addAttribute("product", product);
+            return "order";
+        }
+        
+        order.setProduct(product);
+        order.setQuantityKg(quantity);
+        order.setTotalAmount(product.getPricePerKg().multiply(new BigDecimal(quantity)));
+        order.setStatus("PENDING");
+        order.setOrderDate(LocalDateTime.now());
+        
+        orderRepository.save(order);
+        
+        model.addAttribute("order", order);
+        return "order-confirmation";
+    }
+}
+// src/main/java/com/guardian/controller/InvestorController.java
+package com.guardian.controller;
+
+import com.guardian.repository.OrderRepository;
+import com.guardian.repository.ProductRepository;
+import com.guardian.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import java.math.BigDecimal;
+
+@Controller
+public class InvestorController {
+    
+    @Autowired
+    private OrderRepository orderRepository;
+    
+    @Autowired
+    private ProductRepository productRepository;
+    
+    @GetMapping("/investor")
+    public String investorDashboard(Model model) {
+        // Calculate metrics
+        var orders = orderRepository.findAll();
+        BigDecimal totalRevenue = orders.stream()
+            .map(Order::getTotalAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        
+        long totalOrders = orders.size();
+        long pendingOrders = orderRepository.findByStatus("PENDING").size();
+        
+        model.addAttribute("totalRevenue", totalRevenue);
+        model.addAttribute("totalOrders", totalOrders);
+        model.addAttribute("pendingOrders", pendingOrders);
+        model.addAttribute("totalProducts", productRepository.count());
+        model.addAttribute("marketSize", "1.4 Trillion");
+        model.addAttribute("projected2030", "25 Billion");
+        
+        return "investor";
+    }
+}
