@@ -1,0 +1,240 @@
+<!-- src/main/resources/templates/index.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guardian Agriculture | Sustainable Protein Through Biotechnology</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="brand-icon">🌱</span>
+                <span class="brand-text">Guardian Agriculture</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/investor">Investors</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Reimagining Protein
+                    <span class="highlight">Without Animals</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Guardian Agriculture leverages precision fermentation to create bioidentical dairy proteins, 
+                    meat alternatives, and functional ingredients. Zero animal agriculture. Identical nutrition.
+                </p>
+                <div class="hero-buttons">
+                    <a href="/products" class="btn btn-primary">Explore Products →</a>
+                    <a href="#impact" class="btn btn-secondary">View Impact</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Bar -->
+    <div class="trust-bar">
+        <div class="container">
+            <div class="trust-items">
+                <span>✅ FDA GRAS Approved</span>
+                <span>🔬 Precision Fermentation</span>
+                <span>🌍 Carbon Negative</span>
+                <span>💧 95% Less Water</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Market Opportunity Section -->
+    <section class="market-section">
+        <div class="container">
+            <h2 class="section-title">The $1.4 Trillion Protein Market</h2>
+            <p class="section-subtitle">Precision fermentation is projected to reach $25B+ by 2030</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">$1.4T</div>
+                    <div class="stat-label">Global Protein Market</div>
+                    <div class="stat-trend">+8.2% CAGR</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$150B+</div>
+                    <div class="stat-label">Dairy Protein Opportunity</div>
+                    <div class="stat-trend">Addressable Market</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$25B</div>
+                    <div class="stat-label">Precision Fermentation by 2030</div>
+                    <div class="stat-trend">Analyst Consensus</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">30%</div>
+                    <div class="stat-label">Global Emissions from Animal Ag</div>
+                    <div class="stat-trend">Reduction Potential</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="products-section" id="products">
+        <div class="container">
+            <h2 class="section-title">Our Precision Fermentation Products</h2>
+            <p class="section-subtitle">Bioidentical proteins. Superior sustainability.</p>
+            
+            <div class="products-grid">
+                <div th:each="product : ${featuredProducts}" class="product-card">
+                    <div class="product-badge" th:text="${product.category}">DAIRY</div>
+                    <h3 class="product-name" th:text="${product.name}">Product Name</h3>
+                    <p class="product-description" th:text="${product.description}">Description</p>
+                    <div class="product-impact">
+                        <span>💧 Water Saved: <strong th:text="${product.environmentalImpact.waterSavedPercent} + '%'">95%</strong></span>
+                        <span>🌍 CO₂ Reduced: <strong th:text="${product.environmentalImpact.co2ReducedPercent} + '%'">85%</strong></span>
+                    </div>
+                    <div class="product-price">
+                        <span class="price" th:text="'$' + ${product.pricePerKg} + '/kg'">$55/kg</span>
+                        <span class="moq">Min order: <span th:text="${product.minOrderKg} + 'kg'">100kg</span></span>
+                    </div>
+                    <a th:href="@{/order/{id}(id=${product.id})}" class="btn btn-outline">Request Quote →</a>
+                </div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="/products" class="btn btn-primary">View All Products →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Environmental Impact Section -->
+    <section class="impact-section" id="impact">
+        <div class="container">
+            <h2 class="section-title text-white">Real Environmental Impact</h2>
+            <p class="section-subtitle text-light">Verified metrics from our fermentation facilities</p>
+            
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <div class="impact-number">12.5M</div>
+                    <div class="impact-unit">Liters</div>
+                    <div class="impact-label">Water Saved</div>
+                    <div class="impact-compare">Equivalent to 5 Olympic pools</div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-number">450K</div>
+                    <div class="impact-unit">kg CO₂</div>
+                    <div class="impact-label">Emissions Avoided</div>
+                    <div class="impact-compare">Equal to 100 cars off the road</div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-number">87.5K</div>
+                    <div class="impact-unit">m²</div>
+                    <div class="impact-label">Land Preserved</div>
+                    <div class="impact-compare">120 football fields</div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-number">24</div>
+                    <div class="impact-unit">Brands</div>
+                    <div class="impact-label">Active Partners</div>
+                    <div class="impact-compare">Growing 200% YoY</div>
+                </div>
+            </div>
+            
+            <!-- Comparison Chart -->
+            <div class="comparison-chart">
+                <h3 class="chart-title">Environmental Footprint: Guardian vs. Animal Agriculture</h3>
+                <div class="comparison-item">
+                    <div class="comparison-label">Water Usage</div>
+                    <div class="bar-container">
+                        <div class="bar guardian-bar" style="width: 5%">5%</div>
+                        <div class="bar animal-bar" style="width: 100%">100%</div>
+                    </div>
+                    <div class="comparison-numbers">
+                        <span>🌱 Guardian: 50 L/kg</span>
+                        <span>🐄 Animal: 1,000 L/kg</span>
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-label">CO₂ Emissions</div>
+                    <div class="bar-container">
+                        <div class="bar guardian-bar" style="width: 8%">8%</div>
+                        <div class="bar animal-bar" style="width: 100%">100%</div>
+                    </div>
+                    <div class="comparison-numbers">
+                        <span>🌱 Guardian: 2 kg CO₂/kg</span>
+                        <span>🐄 Animal: 25 kg CO₂/kg</span>
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-label">Land Use</div>
+                    <div class="bar-container">
+                        <div class="bar guardian-bar" style="width: 3%">3%</div>
+                        <div class="bar animal-bar" style="width: 100%">100%</div>
+                    </div>
+                    <div class="comparison-numbers">
+                        <span>🌱 Guardian: 1 m²/kg</span>
+                        <span>🐄 Animal: 35 m²/kg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Ready to Transform Your Supply Chain?</h2>
+            <p class="cta-text">Join leading food brands using Guardian's precision fermentation proteins</p>
+            <a href="/products" class="btn btn-primary btn-large">Request Sample →</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4>Guardian Agriculture</h4>
+                    <p>Intersection of biotech and food tech</p>
+                </div>
+                <div>
+                    <h4>Products</h4>
+                    <ul>
+                        <li><a href="/products?category=DAIRY">Dairy Proteins</a></li>
+                        <li><a href="/products?category=MEAT">Meat Alternatives</a></li>
+                        <li><a href="/products?category=FUNCTIONAL">Functional Ingredients</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="/investor">Investor Relations</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Contact</h4>
+                    <p>📧 hello@guardianagriculture.com</p>
+                    <p>📞 +1 (555) 123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Guardian Agriculture. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>
