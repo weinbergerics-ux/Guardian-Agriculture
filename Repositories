@@ -1,0 +1,137 @@
+// src/main/java/com/guardian/repository/ProductRepository.java
+package com.guardian.repository;
+
+import com.guardian.model.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long> {
+    List<Product> findByCategory(String category);
+    List<Product> findByAvailableTrue();
+}
+// src/main/java/com/guardian/repository/OrderRepository.java
+package com.guardian.repository;
+
+import com.guardian.model.Order;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+
+@Repository
+public interface OrderRepository extends JpaRepository<Order, Long> {
+    List<Order> findByCustomerEmailOrderByOrderDateDesc(String email);
+    List<Order> findByStatus(String status);
+}
+// src/main/java/com/guardian/service/ProductService.java
+package com.guardian.service;
+
+import com.guardian.model.Product;
+import com.guardian.model.EnvironmentalImpact;
+import com.guardian.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import jakarta.annotation.PostConstruct;
+import java.math.BigDecimal;
+import java.util.List;
+
+@Service
+public class ProductService {
+    
+    @Autowired
+    private ProductRepository productRepository;
+    
+    public List<Product> getAllProducts() {
+        return productRepository.findByAvailableTrue();
+    }
+    
+    public Product getProductById(Long id) {
+        return productRepository.findById(id).orElse(null);
+    }
+    
+    public List<Product> getProductsByCategory(String category) {
+        return productRepository.findByCategory(category);
+    }
+    
+    @PostConstruct
+    public void initProducts() {
+        if (productRepository.count() == 0) {
+            // Beta-Lactoglobulin (Whey)
+            Product whey = new Product(
+                "Beta-Lactoglobulin",
+                "DAIRY",
+                "Bioidentical whey protein produced via precision fermentation. Perfect for sports nutrition, baked goods, and protein fortification. Contains no animal products while maintaining identical molecular structure to bovine whey.",
+                "Beta-lactoglobulin, 162 amino acids, 18.4 kDa",
+                new BigDecimal("55.00"),
+                100,
+                "Non-GMO, GRAS Certified, Vegan"
+            );
+            productRepository.save(whey);
+            
+            EnvironmentalImpact impact1 = new EnvironmentalImpact(whey, 95.0, 85.0, 90.0);
+            impact1.setWaterSavedLiters(950000L);
+            impact1.setCo2SavedKg(8500L);
+            impact1.setLandSavedSqM(900L);
+            whey.setEnvironmentalImpact(impact1);
+            productRepository.save(whey);
+            
+            // Casein Micelles
+            Product casein = new Product(
+                "Casein Micelles",
+                "DAIRY",
+                "Functional casein proteins that form micelles naturally. Enables cheese, yogurt, and dairy analogues with authentic texture and melt characteristics.",
+                "Alpha-s1, alpha-s2, beta, kappa casein complex",
+                new BigDecimal("65.00"),
+                100,
+                "GRAS Pending, Vegan, Clean Label"
+            );
+            productRepository.save(casein);
+            
+            EnvironmentalImpact impact2 = new EnvironmentalImpact(casein, 92.0, 88.0, 89.0);
+            impact2.setWaterSavedLiters(920000L);
+            impact2.setCo2SavedKg(8800L);
+            impact2.setLandSavedSqM(890L);
+            casein.setEnvironmentalImpact(impact2);
+            productRepository.save(casein);
+            
+            // Leghemoglobin
+            Product heme = new Product(
+                "Leghemoglobin",
+                "MEAT",
+                "Plant-based heme protein identical to animal hemoglobin. Provides authentic meat flavor, color, and aroma to plant-based meats.",
+                "Soy leghemoglobin, heme cofactor, 150 amino acids",
+                new BigDecimal("250.00"),
+                50,
+                "FDA GRAS, Non-Allergenic, Kosher"
+            );
+            productRepository.save(heme);
+            
+            EnvironmentalImpact impact3 = new EnvironmentalImpact(heme, 98.0, 94.0, 96.0);
+            impact3.setWaterSavedLiters(980000L);
+            impact3.setCo2SavedKg(9400L);
+            impact3.setLandSavedSqM(960L);
+            heme.setEnvironmentalImpact(impact3);
+            productRepository.save(heme);
+            
+            // Lactoferrin
+            Product lactoferrin = new Product(
+                "Lactoferrin",
+                "FUNCTIONAL",
+                "Bioactive iron-binding glycoprotein with immune-supporting properties. Premium functional ingredient for infant formula and nutraceuticals.",
+                "Recombinant human lactoferrin, 692 amino acids, 80 kDa",
+                new BigDecimal("950.00"),
+                25,
+                "GRAS, Organic, Clean Label"
+            );
+            productRepository.save(lactoferrin);
+            
+            EnvironmentalImpact impact4 = new EnvironmentalImpact(lactoferrin, 99.0, 97.0, 98.0);
+            impact4.setWaterSavedLiters(990000L);
+            impact4.setCo2SavedKg(9700L);
+            impact4.setLandSavedSqM(980L);
+            lactoferrin.setEnvironmentalImpact(impact4);
+            productRepository.save(lactoferrin);
+        }
+    }
+}
