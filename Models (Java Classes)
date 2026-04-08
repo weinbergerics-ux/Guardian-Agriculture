@@ -1,0 +1,74 @@
+// src/main/java/com/guardian/model/Product.java
+package com.guardian.model;
+
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "products")
+public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String name;
+    private String category; // DAIRY, MEAT, FUNCTIONAL
+    private String description;
+    private String molecularProfile;
+    private BigDecimal pricePerKg;
+    private Integer minOrderKg;
+    private String certifications;
+    private Boolean available;
+    
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+    private EnvironmentalImpact environmentalImpact;
+    
+    // Constructors
+    public Product() {}
+    
+    public Product(String name, String category, String description, 
+                   String molecularProfile, BigDecimal pricePerKg, 
+                   Integer minOrderKg, String certifications) {
+        this.name = name;
+        this.category = category;
+        this.description = description;
+        this.molecularProfile = molecularProfile;
+        this.pricePerKg = pricePerKg;
+        this.minOrderKg = minOrderKg;
+        this.certifications = certifications;
+        this.available = true;
+    }
+    
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+    
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    
+    public String getMolecularProfile() { return molecularProfile; }
+    public void setMolecularProfile(String molecularProfile) { this.molecularProfile = molecularProfile; }
+    
+    public BigDecimal getPricePerKg() { return pricePerKg; }
+    public void setPricePerKg(BigDecimal pricePerKg) { this.pricePerKg = pricePerKg; }
+    
+    public Integer getMinOrderKg() { return minOrderKg; }
+    public void setMinOrderKg(Integer minOrderKg) { this.minOrderKg = minOrderKg; }
+    
+    public String getCertifications() { return certifications; }
+    public void setCertifications(String certifications) { this.certifications = certifications; }
+    
+    public Boolean getAvailable() { return available; }
+    public void setAvailable(Boolean available) { this.available = available; }
+    
+    public EnvironmentalImpact getEnvironmentalImpact() { return environmentalImpact; }
+    public void setEnvironmentalImpact(EnvironmentalImpact environmentalImpact) { 
+        this.environmentalImpact = environmentalImpact; 
+    }
+}
