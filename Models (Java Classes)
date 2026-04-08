@@ -72,3 +72,137 @@ public class Product {
         this.environmentalImpact = environmentalImpact; 
     }
 }
+// src/main/java/com/guardian/model/EnvironmentalImpact.java
+package com.guardian.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "environmental_impacts")
+public class EnvironmentalImpact {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+    
+    private Double waterSavedPercent;
+    private Double co2ReducedPercent;
+    private Double landSavedPercent;
+    private Long waterSavedLiters;
+    private Long co2SavedKg;
+    private Long landSavedSqM;
+    
+    public EnvironmentalImpact() {}
+    
+    public EnvironmentalImpact(Product product, Double waterSavedPercent, 
+                              Double co2ReducedPercent, Double landSavedPercent) {
+        this.product = product;
+        this.waterSavedPercent = waterSavedPercent;
+        this.co2ReducedPercent = co2ReducedPercent;
+        this.landSavedPercent = landSavedPercent;
+    }
+    
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    
+    public Product getProduct() { return product; }
+    public void setProduct(Product product) { this.product = product; }
+    
+    public Double getWaterSavedPercent() { return waterSavedPercent; }
+    public void setWaterSavedPercent(Double waterSavedPercent) { 
+        this.waterSavedPercent = waterSavedPercent; 
+    }
+    
+    public Double getCo2ReducedPercent() { return co2ReducedPercent; }
+    public void setCo2ReducedPercent(Double co2ReducedPercent) { 
+        this.co2ReducedPercent = co2ReducedPercent; 
+    }
+    
+    public Double getLandSavedPercent() { return landSavedPercent; }
+    public void setLandSavedPercent(Double landSavedPercent) { 
+        this.landSavedPercent = landSavedPercent; 
+    }
+    
+    public Long getWaterSavedLiters() { return waterSavedLiters; }
+    public void setWaterSavedLiters(Long waterSavedLiters) { 
+        this.waterSavedLiters = waterSavedLiters; 
+    }
+    
+    public Long getCo2SavedKg() { return co2SavedKg; }
+    public void setCo2SavedKg(Long co2SavedKg) { 
+        this.co2SavedKg = co2SavedKg; 
+    }
+    
+    public Long getLandSavedSqM() { return landSavedSqM; }
+    public void setLandSavedSqM(Long landSavedSqM) { 
+        this.landSavedSqM = landSavedSqM; 
+    }
+}
+// src/main/java/com/guardian/model/Order.java
+package com.guardian.model;
+
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "orders")
+public class Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String customerName;
+    private String customerEmail;
+    private String companyName;
+    
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+    
+    private Integer quantityKg;
+    private BigDecimal totalAmount;
+    private String status; // PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED
+    private LocalDateTime orderDate;
+    private String specialInstructions;
+    
+    public Order() {}
+    
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
+    
+    public String getCustomerEmail() { return customerEmail; }
+    public void setCustomerEmail(String customerEmail) { this.customerEmail = customerEmail; }
+    
+    public String getCompanyName() { return companyName; }
+    public void setCompanyName(String companyName) { this.companyName = companyName; }
+    
+    public Product getProduct() { return product; }
+    public void setProduct(Product product) { this.product = product; }
+    
+    public Integer getQuantityKg() { return quantityKg; }
+    public void setQuantityKg(Integer quantityKg) { this.quantityKg = quantityKg; }
+    
+    public BigDecimal getTotalAmount() { return totalAmount; }
+    public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
+    
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    
+    public LocalDateTime getOrderDate() { return orderDate; }
+    public void setOrderDate(LocalDateTime orderDate) { this.orderDate = orderDate; }
+    
+    public String getSpecialInstructions() { return specialInstructions; }
+    public void setSpecialInstructions(String specialInstructions) { 
+        this.specialInstructions = specialInstructions; 
+    }
+}
+
